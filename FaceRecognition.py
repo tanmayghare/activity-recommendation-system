@@ -1,13 +1,15 @@
-# Face Recognition:
+# Face Recognition
 import json
 import random
-import numpy as np
 import cv2
+import numpy as np
+
 from PIL import Image
 from tensorflow.keras.models import model_from_json
-model_json_file = 'C:/Users/ghare/Desktop/BE Project Codes G86/model.json'
-model_weights_file = 'C:/Users/ghare/Desktop/BE Project Codes G86/model_weights.h5'
-json_file_path = "C:/Users/ghare/Desktop/BE Project Codes G86/Activities.json"
+
+model_json_file = 'model.json'
+model_weights_file = 'model_weights.h5'
+json_file_path = 'Activities.json'
 
 with open(model_json_file, "r") as json_file:
     loaded_model_json = json_file.read()
@@ -15,11 +17,8 @@ with open(model_json_file, "r") as json_file:
     loaded_model.load_weights(model_weights_file)
     
 face_cascade = cv2.CascadeClassifier('C:/Users/ghare/Desktop/BE Project Codes G86/haarcascade_frontalface_default.xml')
-
 image = cv2.imread('C:/Users/ghare/Desktop/BE Project Codes G86/image.jpg')
-
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    
 faces = face_cascade.detectMultiScale(gray)
 
 for (x,y,w,h) in faces:
@@ -53,7 +52,7 @@ for (x,y,w,h) in faces:
 print(text)
 # cap.release()
 cv2.destroyAllWindows()
-file1 = open("C:/Users/ghare/Desktop/BE Project Codes G86/FinalFaceEmotion.txt", "w")
+file1 = open("FinalFaceEmotion.txt", "w")
 file1.write(text)
 file1.close()
-cv2.imwrite("C:/Users/ghare/Desktop/BE Project Codes G86/faceemotion.jpg", img2)              
+cv2.imwrite("faceemotion.jpg", img2)              
