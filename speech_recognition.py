@@ -9,7 +9,6 @@ if __name__ == '__main__':
   import scipy.io.wavfile                               # Open a WAV files
   import numpy as np                                    # Used for working with arrays
   import pickle
-  import glob
   import cv2   
   import pathlib
   temp = pathlib.PosixPath
@@ -23,8 +22,8 @@ if __name__ == '__main__':
   from fastai.text.all import *
   from fastai.vision.widgets import *
 
-  model = load_learner('C:/Users/ghare/Desktop/BE Project Codes G86/speech_1.pkl')
-  p = pathlib.Path('C:/Users/ghare/Desktop/BE Project Codes G86/audio.wav')
+  model = load_learner('/speech_1.pkl')
+  p = pathlib.Path('/audio.wav')
 
   count = 1
   y, sr = librosa.load(p)
@@ -40,7 +39,7 @@ if __name__ == '__main__':
   # Display the spectrogram with specshow
   librosa.display.specshow(audio_spectogram, y_axis='mel', fmax=20000, x_axis='time')
 
-  p = os.path.join('C:/Users/ghare/Desktop/BE Project Codes G86', "{}.jpg".format(str(count)))
+  p = os.path.join('/', "{}.jpg".format(str(count)))
   plt.savefig(p)
 
   p1 ='C:/Users/ghare/Desktop/BE Project Codes G86/1.jpg'
@@ -51,7 +50,7 @@ if __name__ == '__main__':
   print(probs)
   print(text2)
 
-  file1 = open("C:/Users/ghare/Desktop/BE Project Codes G86/FinalSpeechEmotion.txt", "w")
+  file1 = open("FinalSpeechEmotion.txt", "w")
   file1.write(text2.capitalize())
   file1.close()
-  cv2.imwrite("C:/Users/ghare/Desktop/BE Project Codes G86/speechemotion.jpg", img)
+  cv2.imwrite("/speechemotion.jpg", img)
