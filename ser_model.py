@@ -17,9 +17,9 @@ from fastai.vision.widgets import *
 
 import struct                                         # Unpack audio data into integers
 import time
+import sounddevice
 from tkinter import TclError
 from scipy.fftpack import fft                         # Imports all fft algorithms 
-import sounddevice
 from scipy.io.wavfile import write
 class FetchLabel():
 
@@ -143,7 +143,6 @@ learn = cnn_learner(dls, models.resnet34, loss_func=CrossEntropyLossFlat(), metr
 # Find optimum learning rate (the steepest point)
 # lr_min, lr_steep = learn.lr_find()
 # print(f"Minimum/10: {lr_min:.2e}, steepest point: {lr_steep:.2e}")
-
 
 lrs = learn.lr_find(suggest_funcs=(minimum, steep, valley, slide))
 
