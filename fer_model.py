@@ -1,13 +1,18 @@
+import os
+import cv2
 import numpy as np
 import seaborn as sns
-from keras.preprocessing.image import load_img, img_to_array
 import matplotlib.pyplot as plt
-import os
 
-# size of the image: 48*48 pixels
+from keras.models import model_from_json
+from keras.preprocessing.image import load_img, img_to_array
+from keras.preprocessing import image
+from keras.preprocessing.image import ImageDataGenerator
+
+# Size of the image: 48*48 pixels
 pic_size = 48
 
-# input path for the images
+# Input path for the images
 base_path = "/content/img/images/"
 #../input/face-expression-recognition-dataset/images/
 plt.figure(0, figsize=(12,20))
@@ -22,10 +27,8 @@ for expression in os.listdir(base_path + "train"):
 
 plt.tight_layout()
 plt.show()
-## Image augmentation using keras ImageDataGenerator
-# building data generator 
-
-from keras.preprocessing.image import ImageDataGenerator
+# Image augmentation using keras ImageDataGenerator
+# Building data generator 
 
 batch_size = 128
 base_path = "/content/img/images/"
@@ -57,13 +60,13 @@ from keras.layers import Dense, Input, Dropout, GlobalAveragePooling2D, Flatten,
 from keras.models import Model, Sequential
 from tensorflow.keras.optimizers import Adam
 
-# number of possible label values
+# Number of possible label values
 nb_classes = 7
 
 # Initialising the CNN
 model = Sequential()
 
-# 1 - Convolution
+# 1st Convolution layer
 model.add(Conv2D(64,(3,3), padding='same', input_shape=(56, 56,1)))
 model.add(BatchNormalization())
 model.add(Activation('relu'))
@@ -114,9 +117,9 @@ opt = Adam(lr=0.0001)
 model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
 # %%time
 
-# number of epochs to train the NN
+# Number of epochs to train the NN
 epochs = 50
-# checkpoint to save best model
+# Checkpoint to save the best model
 from keras.callbacks import ModelCheckpoint
 
 checkpoint = ModelCheckpoint("model_weights.h5", monitor='val_accuracy', verbose=1, save_best_only=True, mode='max')
@@ -132,13 +135,8 @@ history = model.fit_generator(generator=train_generator,
 # from google.colab import drive
 # drive.mount('/content/drive')
 model.save("/content")
-import os
-import cv2
-import numpy as np
-from keras.models import model_from_json
-from keras.preprocessing import image
-
 model_json = model.to_json()
+
 with open("/content/model.json", "w") as json_file:
   json_file.write(model_json)
 model.save_weights("/content/model.h5")
