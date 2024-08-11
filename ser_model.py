@@ -1,13 +1,12 @@
 import matplotlib.pyplot as plt                       # Allows you to plot things
 import librosa                                        # Python package for music and audio analysis
 import librosa.display                                # Allows you to display audio files 
-import os                                             # The OS module in Python provides a way of using operating system dependent functionality.
+import os                                             # The OS module in Python provides a way of using operating system-dependent functionality.
 import scipy.io.wavfile                               # Open a WAV files
 import numpy as np                                    # Used for working with arrays
 import fastai
-# import glob                                           # Used to return all file paths that match a specific pattern
+# import glob                                         # Used to return all file paths that match a specific pattern
 
-# Import fast AI
 from fastai import *                                 
 from fastai.vision.all import *
 from fastai.vision.data import ImageDataLoaders
@@ -19,61 +18,48 @@ import struct                                         # Unpack audio data into i
 import time
 import sounddevice
 from tkinter import TclError
-from scipy.fftpack import fft                         # Imports all fft algorithms 
+from scipy.fftpack import fft                         # Imports all FFT algorithms 
 from scipy.io.wavfile import write
 class FetchLabel():
 
     def get_emotion(self, file_path):
         item = file_path.split('/')[-1]
-        if item[6:-16]=='02' and int(item[18:-4])%2==0:
-            return 'female_calm'
-        elif item[6:-16]=='02' and int(item[18:-4])%2==1:
-            return 'male_calm'
-        elif item[6:-16]=='03' and int(item[18:-4])%2==0:
-            return 'female_happy'
-        elif item[6:-16]=='03' and int(item[18:-4])%2==1:
-            return 'male_happy'
-        elif item[6:-16]=='04' and int(item[18:-4])%2==0:
-            return 'female_sad'
-        elif item[6:-16]=='04' and int(item[18:-4])%2==1:
-            return 'male_sad'
-        elif item[6:-16]=='05' and int(item[18:-4])%2==0:
-            return 'female_angry'
-        elif item[6:-16]=='05' and int(item[18:-4])%2==1:
-            return 'male_angry'
-        elif item[6:-16]=='06' and int(item[18:-4])%2==0:
-            return 'female_fearful'
-        elif item[6:-16]=='06' and int(item[18:-4])%2==1:
-            return 'male_fearful'
-        elif item[6:-16]=='01' and int(item[18:-4])%2==0:
-            return 'female_neutral'
-        elif item[6:-16]=='01' and int(item[18:-4])%2==1:
-            return 'male_neutral'
-        elif item[6:-16]=='07' and int(item[18:-4])%2==0:
-            return 'female_disgusted'
-        elif item[6:-16]=='07' and int(item[18:-4])%2==1:
-            return 'male_disgusted'
-        elif item[6:-16]=='08' and int(item[18:-4])%2==0:
-            return 'female_surprised'
-        elif item[6:-16]=='08' and int(item[18:-4])%2==1:
-            return 'male_surprised'
-        elif item[:1]=='a':
-            return 'male_angry'
-        elif item[:1]=='f':
-            return 'male_fearful'
-        elif item[:1]=='h':
-            return 'male_happy'
-        elif item[:1]=='n':
-            return 'male_neutral'
-        elif item[:2]=='sa':
-            return 'male_sad'
-        elif item[:1]=='d':
-            return 'male_disgusted'
-        elif item[:2]=='su':
-            return 'male_surprised'
+    
+        emotion_map = {
+            '02': 'calm',
+            '03': 'happy',
+            '04': 'sad',
+            '05': 'angry',
+            '06': 'fearful',
+            '01': 'neutral',
+            '07': 'disgusted',
+            '08': 'surprised'
+        }
+    
+        # Check for the first letter-based mapping
+        first_letter_map = {
+            'a': 'angry',
+            'f': 'fearful',
+            'h': 'happy',
+            'n': 'neutral',
+            'sa': 'sad',
+            'd': 'disgusted',
+            'su': 'surprised'
+        }
+    
+        if item[:2] in first_letter_map:
+            return f"male_{first_letter_map[item[:2]]}"
+        if item[:1] in first_letter_map:
+            return f"male_{first_letter_map[item[:1]]}"
+    
+        emotion = emotion_map.get(item[6:-16])
+        if emotion:
+            gender = 'female' if int(item[18:-4]) % 2 == 0 else 'male'
+            return f"{gender}_{emotion}"
+    
+        return None
 
-
-label = FetchLabel()            
+label = FetchLabel()
         
 # ! unzip /content/drive/MyDrive/output_folder_train.zip -d /content/drive/MyDrive/output_folder_train
 # ! unzip /content/drive/MyDrive/speech-emotion-recognition-ravdess-data.zip -d /content/drive/MyDrive/
@@ -90,7 +76,7 @@ plt.figure(figsize=(40, 5))                           # Shape of audio figure
 librosa.display.waveplot(data, sr=sampling_rate)      # Show audio
 # Load in audio file
 y, sr = librosa.load('/content/drive/MyDrive/Actor_10/03-01-01-01-01-01-10.wav')
-yt,_=librosa.effects.trim(y)                        # Trim leading and trailing silence from an audio signal.
+yt,_=librosa.effects.trim(y)                          # Trim leading and trailing silence from an audio signal.
 # Converting the sound clips into a melspectogram with librosa
 # A mel spectrogram is a spectrogram where the frequencies are converted to the mel scale
 audio_spectogram = librosa.feature.melspectrogram(y=y, sr=sr, n_fft=1024, hop_length=100)
@@ -118,20 +104,13 @@ main_path = Path('/content/drive/MyDrive/Actor_*/')
 
 # List all sentiment groups 
 train_path.ls()
-# !pip install fastai --upgrade
-# !pip install fastai
-from fastai.vision.all import *
-from fastai.vision.data import ImageDataLoaders
-from fastai.tabular.all import *
-from fastai.text.all import *
-from fastai.vision.widgets import *
+
 # Create from imagenet style dataset in path with train and valid subfolders (or provide valid_pct)
-# from fastai.vision.all import *
 # from fastbook import *
 
 dls = ImageDataLoaders.from_folder(train_path, valid_pct=0.2, seed=42, num_workers=0)
 # dls.valid_ds.items[:10]
-# !pip install fastai --upgrade 
+
 # Showcase the sentiment categories 
 dls.vocab
 # See what a sample of a batch looks like
