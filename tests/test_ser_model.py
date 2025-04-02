@@ -3,7 +3,7 @@ from pathlib import Path
 import numpy as np
 import librosa
 from src.recognition.speech_recognition import SpeechEmotionRecognizer
-from config.settings import config
+from configs.settings import config
 
 @pytest.fixture
 def speech_recognizer():

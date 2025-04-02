@@ -8,7 +8,7 @@ from pathlib import Path
 from fastai.vision.all import load_learner
 from typing import Tuple, Optional
 from ..utils.logger import recognition_logger
-from config.settings import config
+from configs.settings import config
 
 class SpeechEmotionRecognizer:
     def __init__(self, model_path: str, audio_path: str):

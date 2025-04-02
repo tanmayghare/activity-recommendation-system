@@ -3,7 +3,7 @@ import numpy as np
 from pathlib import Path
 from typing import Tuple, Optional
 from ..utils.logger import recognition_logger
-from config.settings import config
+from configs.settings import config
 
 class FaceRecognition:
     def __init__(self, model_path: str, cascade_path: str):

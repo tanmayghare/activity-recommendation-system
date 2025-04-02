@@ -3,7 +3,7 @@
 import logging
 import os
 from datetime import datetime
-from config.settings import config
+from configs.settings import config
 
 def setup_logger(name: str, log_file: str = None, level: int = logging.INFO) -> logging.Logger:
     """

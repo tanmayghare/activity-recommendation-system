@@ -2,7 +2,7 @@ import pytest
 from pathlib import Path
 import numpy as np
 from src.recognition.face_recognition import FaceRecognition
-from config.settings import config
+from configs.settings import config
 
 @pytest.fixture
 def face_recognizer():
