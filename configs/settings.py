@@ -12,6 +12,15 @@ MODELS_DIR = BASE_DIR / "models"
 TEMP_DIR = BASE_DIR / "tmp"
 LOGS_DIR = BASE_DIR / "logs"
 
+# Dataset paths - TO BE UPDATED when datasets are available
+DATASET_DIR = DATA_DIR / "datasets"
+FER_DATASET_DIR = DATASET_DIR / "fer"
+SER_DATASET_DIR = DATASET_DIR / "ser"
+FER_TRAIN_DIR = FER_DATASET_DIR / "train"
+FER_VAL_DIR = FER_DATASET_DIR / "val"
+SER_TRAIN_DIR = SER_DATASET_DIR / "train"
+SER_VAL_DIR = SER_DATASET_DIR / "val"
+
 @dataclass
 class ModelConfig:
     """Configuration for ML models."""
@@ -21,6 +30,8 @@ class ModelConfig:
     batch_size: int = 32
     epochs: int = 10
     learning_rate: float = 0.001
+    train_data_dir: Optional[Path] = None
+    val_data_dir: Optional[Path] = None
 
 @dataclass
 class AppConfig:
@@ -40,12 +51,16 @@ class Config:
 
     def _create_directories(self):
         """Create necessary directories if they don't exist."""
-        for directory in [DATA_DIR, MODELS_DIR, TEMP_DIR, LOGS_DIR]:
+        for directory in [DATA_DIR, MODELS_DIR, TEMP_DIR, LOGS_DIR, DATASET_DIR, 
+                         FER_DATASET_DIR, SER_DATASET_DIR, 
+                         FER_TRAIN_DIR, FER_VAL_DIR, 
+                         SER_TRAIN_DIR, SER_VAL_DIR]:
             directory.mkdir(exist_ok=True)
             
         # Create subdirectories
         (DATA_DIR / "raw").mkdir(exist_ok=True)
         (DATA_DIR / "processed").mkdir(exist_ok=True)
+        (DATA_DIR / "results").mkdir(exist_ok=True)
 
     def _init_configs(self):
         """Initialize specific configurations."""
@@ -54,7 +69,9 @@ class Config:
             input_size=(48, 48),
             classes=["angry", "disgust", "fear", "happy", "neutral", "sad", "surprise"],
             batch_size=32,
-            epochs=50
+            epochs=50,
+            train_data_dir=FER_TRAIN_DIR,
+            val_data_dir=FER_VAL_DIR
         )
 
         self.ser_config = ModelConfig(
@@ -62,7 +79,9 @@ class Config:
             input_size=(128, 128),
             classes=["angry", "calm", "disgust", "fear", "happy", "neutral", "sad", "surprise"],
             batch_size=16,
-            epochs=30
+            epochs=30,
+            train_data_dir=SER_TRAIN_DIR,
+            val_data_dir=SER_VAL_DIR
         )
 
         self.app_config = AppConfig(
@@ -91,12 +110,22 @@ class Config:
     @property
     def face_cascade_path(self) -> str:
         """Get path to face cascade classifier."""
-        return str(BASE_DIR / "config" / "haarcascade_frontalface_default.xml")
+        return str(MODELS_DIR / "face" / "haarcascade_frontalface_default.xml")
 
     @property
-    def activities_file(self) -> str:
+    def activities_path(self) -> str:
         """Get path to activities configuration file."""
         return str(DATA_DIR / "activities.json")
+        
+    @property
+    def fer_dataset_dir(self) -> Path:
+        """Get path to facial emotion recognition dataset directory."""
+        return FER_DATASET_DIR
+        
+    @property
+    def ser_dataset_dir(self) -> Path:
+        """Get path to speech emotion recognition dataset directory."""
+        return SER_DATASET_DIR
 
 # Create global instance
 config = Config() 
