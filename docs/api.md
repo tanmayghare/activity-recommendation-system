@@ -2,193 +2,185 @@
 
 ## Overview
 
-The Activity Recommendation System provides a set of Python classes and functions for emotion recognition and activity recommendations. This document describes the main components and their usage.
+The Activity Recommendation System provides a RESTful API for emotion detection and activity recommendations. This document describes the available endpoints, request/response formats, and authentication requirements.
 
-## Face Recognition Module
+## Base URL
 
-### `FaceRecognition` Class
-
-```python
-class FaceRecognition:
-    def __init__(self, model_path: str, cascade_path: str)
+```
+http://localhost:8501/api/v1
 ```
 
-Initializes the face recognition system with paths to the model and cascade classifier files.
+## Authentication
 
-#### Parameters:
-- `model_path`: Path to the pre-trained emotion recognition model
-- `cascade_path`: Path to the face cascade classifier
+Currently, the API does not require authentication. However, rate limiting is implemented to prevent abuse.
 
-#### Methods:
+## Rate Limiting
 
-##### `load_model()`
-Loads the pre-trained emotion recognition model.
+- 100 requests per minute per IP address
+- Rate limit headers are included in the response:
+  - `X-RateLimit-Limit`: Maximum number of requests per minute
+  - `X-RateLimit-Remaining`: Number of requests remaining in the current time window
+  - `X-RateLimit-Reset`: Time when the rate limit resets (Unix timestamp)
 
-##### `load_cascade()`
-Loads the face cascade classifier.
+## Endpoints
 
-##### `preprocess_image(image_path: Path) -> Tuple[np.ndarray, np.ndarray]`
-Preprocesses an image for face detection and emotion recognition.
+### Detect Face Emotion
 
-##### `detect_faces(blob: np.ndarray, image: np.ndarray) -> list`
-Detects faces in the preprocessed image.
-
-##### `predict_emotion(image_path: Path) -> Tuple[str, float]`
-Predicts emotion from an image.
-
-##### `save_results(emotion: str, confidence: float) -> None`
-Saves the prediction results.
-
-##### `cleanup() -> None`
-Cleans up temporary files.
-
-##### `run(image_path: Path) -> None`
-Runs the complete face recognition process.
-
-## Speech Recognition Module
-
-### `SpeechEmotionRecognizer` Class
-
-```python
-class SpeechEmotionRecognizer:
-    def __init__(self, model_path: str, audio_path: str)
+```http
+POST /emotion/face
 ```
 
-Initializes the speech emotion recognition system with paths to the model and audio file.
+Detects emotions from a facial image.
 
-#### Parameters:
-- `model_path`: Path to the pre-trained model
-- `audio_path`: Path to the audio file to process
+#### Request
 
-#### Methods:
+- Content-Type: `multipart/form-data`
+- Body:
+  - `image`: Image file (JPEG, PNG) - max 5MB
 
-##### `load_model()`
-Loads the pre-trained model for emotion recognition.
+#### Response
 
-##### `process_audio() -> np.ndarray`
-Processes the audio file and converts it into a mel spectrogram.
-
-##### `save_spectrogram(audio_spectogram: np.ndarray) -> Path`
-Saves the mel spectrogram as an image file.
-
-##### `predict_emotion(image_path: Path) -> Tuple[str, np.ndarray, np.ndarray]`
-Predicts emotion from the spectrogram image.
-
-##### `save_results(text: str, img: np.ndarray) -> None`
-Saves the predicted emotion and the spectrogram image.
-
-##### `cleanup() -> None`
-Cleans up temporary files.
-
-##### `run() -> None`
-Runs the complete speech emotion recognition process.
-
-## Main Application
-
-### `ActivityRecommendationSystem` Class
-
-```python
-class ActivityRecommendationSystem:
-    def __init__(self)
+```json
+{
+  "emotion": "happy",
+  "confidence": 0.95,
+  "recommendations": [
+    "Go for a walk in the park",
+    "Listen to upbeat music",
+    "Call a friend"
+  ]
+}
 ```
 
-Initializes the activity recommendation system.
+#### Error Responses
 
-#### Methods:
+- `400 Bad Request`: Invalid image format or size
+- `500 Internal Server Error`: Server-side error
 
-##### `load_activities() -> Dict[str, List[str]]`
-Loads activity recommendations from the configuration file.
+### Detect Speech Emotion
 
-##### `get_recommendations(emotion: str) -> List[str]`
-Gets activity recommendations based on the detected emotion.
-
-##### `process_face_emotion(uploaded_file) -> Optional[str]`
-Processes facial emotion from an uploaded image.
-
-##### `process_speech_emotion(uploaded_file) -> Optional[str]`
-Processes speech emotion from an uploaded audio file.
-
-## Configuration
-
-### `Config` Class
-
-```python
-class Config:
-    def __init__(self)
+```http
+POST /emotion/speech
 ```
 
-Manages application configuration.
+Detects emotions from a speech audio file.
 
-#### Properties:
-- `models_dir`: Directory containing model files
-- `data_dir`: Directory for data files
-- `temp_dir`: Directory for temporary files
-- `logs_dir`: Directory for log files
-- `activities_path`: Path to the activities configuration file
+#### Request
 
-## Usage Examples
+- Content-Type: `multipart/form-data`
+- Body:
+  - `audio`: Audio file (WAV) - max 10MB
 
-### Face Emotion Recognition
+#### Response
 
-```python
-from src.recognition.face_recognition import FaceRecognition
-from pathlib import Path
-
-# Initialize the face recognizer
-recognizer = FaceRecognition(
-    "path/to/model",
-    "path/to/cascade.xml"
-)
-
-# Process an image
-image_path = Path("path/to/image.jpg")
-recognizer.run(image_path)
+```json
+{
+  "emotion": "sad",
+  "confidence": 0.88,
+  "recommendations": [
+    "Watch a comedy movie",
+    "Take a warm bath",
+    "Write in a journal"
+  ]
+}
 ```
 
-### Speech Emotion Recognition
+#### Error Responses
 
-```python
-from src.recognition.speech_recognition import SpeechEmotionRecognizer
-from pathlib import Path
+- `400 Bad Request`: Invalid audio format or size
+- `500 Internal Server Error`: Server-side error
 
-# Initialize the speech recognizer
-recognizer = SpeechEmotionRecognizer(
-    "path/to/model.pkl",
-    "path/to/audio.wav"
-)
+### Get Recommendations
 
-# Process the audio
-recognizer.run()
+```http
+GET /recommendations/{emotion}
 ```
 
-### Activity Recommendations
+Get activity recommendations for a specific emotion.
 
-```python
-from src.app import ActivityRecommendationSystem
+#### Request
 
-# Initialize the system
-system = ActivityRecommendationSystem()
+- Path Parameters:
+  - `emotion`: The emotion to get recommendations for (e.g., "happy", "sad")
 
-# Get recommendations for an emotion
-recommendations = system.get_recommendations("happy")
-for rec in recommendations:
-    print(rec)
+#### Response
+
+```json
+{
+  "emotion": "happy",
+  "recommendations": [
+    "Go for a walk in the park",
+    "Listen to upbeat music",
+    "Call a friend"
+  ]
+}
 ```
 
-## Error Handling
+#### Error Responses
 
-All methods include proper error handling and logging. Common exceptions include:
+- `400 Bad Request`: Invalid emotion
+- `404 Not Found`: Emotion not found in database
 
-- `FileNotFoundError`: When required files are not found
-- `ValueError`: When input data is invalid
-- `RuntimeError`: When processing fails
+## Error Response Format
 
-## Logging
+All error responses follow this format:
 
-The system uses a hierarchical logging system with three main loggers:
+```json
+{
+  "error": {
+    "code": "ERROR_CODE",
+    "message": "Human-readable error message",
+    "details": {
+      "field": "Additional error details if available"
+    }
+  }
+}
+```
 
-- `app_logger`: For application-level events
-- `model_logger`: For model-related events
-- `recognition_logger`: For recognition-related events
+## Common Error Codes
 
-Log files are stored in the configured logs directory with timestamps.
+- `INVALID_INPUT`: The request contains invalid data
+- `FILE_TOO_LARGE`: The uploaded file exceeds the size limit
+- `INVALID_FILE_TYPE`: The file type is not supported
+- `PROCESSING_ERROR`: Error occurred while processing the input
+- `NOT_FOUND`: The requested resource was not found
+- `INTERNAL_ERROR`: An unexpected error occurred
+
+## Examples
+
+### cURL
+
+Detect face emotion:
+```bash
+curl -X POST \
+  http://localhost:8501/api/v1/emotion/face \
+  -H 'Content-Type: multipart/form-data' \
+  -F 'image=@/path/to/image.jpg'
+```
+
+Get recommendations:
+```bash
+curl -X GET \
+  http://localhost:8501/api/v1/recommendations/happy
+```
+
+### Python
+
+```python
+import requests
+
+# Detect face emotion
+files = {'image': open('image.jpg', 'rb')}
+response = requests.post('http://localhost:8501/api/v1/emotion/face', files=files)
+print(response.json())
+
+# Get recommendations
+response = requests.get('http://localhost:8501/api/v1/recommendations/happy')
+print(response.json())
+```
+
+## Support
+
+For API support or to report issues, please contact:
+- Email: support@activity-recommendation-system.com
+- GitHub Issues: https://github.com/yourusername/activity-recommendation-system/issues

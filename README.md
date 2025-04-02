@@ -1,23 +1,23 @@
 # Activity Recommendation System
 
-A machine learning-based system that recommends activities based on detected emotions from facial expressions and speech patterns.
+A sophisticated machine learning system that provides personalized activity recommendations based on emotion detection from facial expressions and speech patterns.
 
 ## Features
 
 - **Facial Emotion Recognition (FER)**
-  - Detects emotions from facial expressions in images
-  - Supports multiple emotion categories
-  - Real-time processing
+  - Real-time emotion detection from facial expressions
+  - Support for multiple emotion categories
+  - High-accuracy processing pipeline
 
 - **Speech Emotion Recognition (SER)**
-  - Analyzes speech patterns to detect emotions
-  - Processes WAV audio files
-  - Provides confidence scores
+  - Advanced speech pattern analysis for emotion detection
+  - WAV audio file processing
+  - Confidence score generation
 
 - **Activity Recommendations**
-  - Personalized activity suggestions based on detected emotions
-  - Multiple recommendations per emotion
-  - Easy-to-use web interface
+  - Context-aware activity suggestions based on detected emotions
+  - Multiple recommendation options per emotion
+  - Intuitive web interface
 
 ## Installation
 
@@ -27,7 +27,7 @@ A machine learning-based system that recommends activities based on detected emo
    cd activity-recommendation-system
    ```
 
-2. Create a virtual environment:
+2. Create and activate a virtual environment:
    ```bash
    python -m venv venv
    source venv/bin/activate  # On Windows: venv\Scripts\activate
@@ -47,7 +47,7 @@ A machine learning-based system that recommends activities based on detected emo
 
 ```
 activity-recommendation-system/
-├── config/
+├── configs/
 │   └── settings.py          # Configuration management
 ├── data/
 │   ├── raw/                 # Raw input data
@@ -61,54 +61,55 @@ activity-recommendation-system/
 │   ├── recognition/
 │   │   ├── face_recognition.py
 │   │   └── speech_recognition.py
-│   ├── utils/
-│   │   └── logger.py
-│   └── app.py
+│   └── utils/
+│       └── logger.py
 ├── tests/
 │   ├── test_fer_model.py
 │   └── test_ser_model.py
+├── app.py                  # Main application file
 ├── .gitignore
+├── LICENSE
 ├── README.md
 └── requirements.txt
 ```
 
 ## Usage
 
-1. Start the application:
+1. Launch the application:
    ```bash
-   streamlit run src/app.py
+   streamlit run app.py
    ```
 
-2. Open your web browser and navigate to `http://localhost:8501`
+2. Access the web interface at `http://localhost:8501`
 
-3. Upload an image or audio file:
-   - For facial emotion recognition: Upload a clear image of a face
+3. Process your input:
+   - For facial emotion recognition: Upload a clear facial image
    - For speech emotion recognition: Upload a WAV audio file
 
-4. Click "Get Recommendations" to process the input and receive activity suggestions
+4. Generate recommendations by clicking "Get Recommendations"
 
 ## Configuration
 
-The system can be configured through `config/settings.py`:
+System configuration is managed through `configs/settings.py`:
 
-- Model paths and parameters
-- Input/output directories
+- Model configurations and parameters
+- Data directory paths
 - Logging settings
-- Application settings
+- Application parameters
 
 ## Development
 
-1. Set up development environment:
+1. Install development dependencies:
    ```bash
    pip install -r requirements-dev.txt
    ```
 
-2. Run tests:
+2. Execute test suite:
    ```bash
    pytest tests/
    ```
 
-3. Check code style:
+3. Verify code quality:
    ```bash
    flake8 src/
    black src/
@@ -117,14 +118,14 @@ The system can be configured through `config/settings.py`:
 ## Contributing
 
 1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
 
