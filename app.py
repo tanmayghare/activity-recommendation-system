@@ -1,9 +1,9 @@
 import streamlit as st
 from pathlib import Path
-import json
-from typing import Dict, List, Optional, Union
+from typing import List, Optional
 from src.recognition.face_recognition import FaceRecognition
 from src.recognition.speech_recognition import SpeechEmotionRecognizer
+from src.recommendation.llm_recommender import LLMRecommender
 from src.utils.logger import app_logger
 from configs.settings import config
 
@@ -19,39 +19,10 @@ class ActivityRecommendationSystem:
                 str(config.models_dir / "speech_1.pkl"),
                 str(config.data_dir / "raw" / "audio.wav")
             )
-            self.activities = self.load_activities()
+            self.llm_recommender = LLMRecommender()
             app_logger.info("ActivityRecommendationSystem initialized successfully")
         except Exception as e:
             app_logger.error(f"Failed to initialize ActivityRecommendationSystem: {str(e)}")
-            raise
-
-    def load_activities(self) -> Dict[str, List[str]]:
-        """Load activity recommendations from the configuration file with validation."""
-        try:
-            activities_path = Path(config.activities_path)
-            if not activities_path.exists():
-                raise FileNotFoundError(f"Activities file not found: {activities_path}")
-            
-            app_logger.info(f"Loading activities from {activities_path}")
-            with open(activities_path) as f:
-                activities = json.load(f)
-                
-            # Validate activities data structure
-            if not isinstance(activities, dict):
-                raise ValueError("Activities data must be a dictionary")
-            
-            for emotion, recommendations in activities.items():
-                if not isinstance(recommendations, list):
-                    raise ValueError(f"Recommendations for {emotion} must be a list")
-                if not all(isinstance(rec, str) for rec in recommendations):
-                    raise ValueError(f"All recommendations for {emotion} must be strings")
-            
-            return activities
-        except json.JSONDecodeError as e:
-            app_logger.error(f"Invalid JSON in activities file: {str(e)}")
-            raise
-        except Exception as e:
-            app_logger.error(f"Failed to load activities: {str(e)}")
             raise
 
     def get_recommendations(self, emotion: str) -> List[str]:
@@ -63,13 +34,12 @@ class ActivityRecommendationSystem:
             emotion = emotion.lower().strip()
             if not emotion:
                 raise ValueError("Emotion cannot be empty")
-                
-            if emotion not in self.activities:
-                app_logger.warning(f"Unknown emotion: {emotion}")
-                return ["No specific recommendations available for this emotion."]
             
-            recommendations = self.activities[emotion]
-            app_logger.info(f"Found {len(recommendations)} recommendations for {emotion}")
+            recommendations = self.llm_recommender.get_recommendations(
+                emotion,
+                num_recommendations=config.llm_config.num_recommendations
+            )
+            app_logger.info(f"Generated {len(recommendations)} recommendations for {emotion}")
             return recommendations
         except Exception as e:
             app_logger.error(f"Failed to get recommendations: {str(e)}")
@@ -186,7 +156,7 @@ def main():
         col1, col2 = st.columns(2)
         
         with col1:
-            st.subheader("Facial Emotion Recognition")
+            st.subheader("Facial Expression Recognition")
             face_file = st.file_uploader(
                 "Upload an image",
                 type=["jpg", "jpeg", "png"],

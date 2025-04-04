@@ -14,10 +14,10 @@ LOGS_DIR = BASE_DIR / "logs"
 
 # Dataset paths - TO BE UPDATED when datasets are available
 DATASET_DIR = DATA_DIR / "datasets"
-FER_DATASET_DIR = DATASET_DIR / "fer"
+FER_DATASET_DIR = Path("FER-2013")  # Updated to use the FER-2013 directory in project root
 SER_DATASET_DIR = DATASET_DIR / "ser"
 FER_TRAIN_DIR = FER_DATASET_DIR / "train"
-FER_VAL_DIR = FER_DATASET_DIR / "val"
+FER_VAL_DIR = FER_DATASET_DIR / "test"  # Using test set for validation
 SER_TRAIN_DIR = SER_DATASET_DIR / "train"
 SER_VAL_DIR = SER_DATASET_DIR / "val"
 
@@ -34,6 +34,24 @@ class ModelConfig:
     val_data_dir: Optional[Path] = None
 
 @dataclass
+class LLMConfig:
+    """Configuration for LLM-based recommendations."""
+    model_name: str = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
+    temperature: float = 0.7
+    max_tokens: int = 500
+    num_recommendations: int = 5
+    device: str = "auto"  # 'auto', 'cpu', 'cuda', or specific device like 'cuda:0'
+    torch_dtype: str = "float16"  # 'float16' or 'float32'
+    
+    # Model alternatives for different resource constraints
+    available_models: dict = {
+        "tiny": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",   # Lightweight (1.1B parameters)
+        "small": "facebook/opt-350m",                   # Very small (350M parameters)
+        "medium": "facebook/opt-1.3b",                  # Medium size (1.3B parameters)
+        "large": "stabilityai/stablelm-base-alpha-3b"   # Larger model (3B parameters)
+    }
+
+@dataclass
 class AppConfig:
     """Application-specific configuration."""
     allowed_image_types: List[str]
@@ -48,6 +66,7 @@ class Config:
         """Initialize configuration with default values."""
         self._create_directories()
         self._init_configs()
+        self._llm_config = LLMConfig()
 
     def _create_directories(self):
         """Create necessary directories if they don't exist."""
@@ -113,19 +132,19 @@ class Config:
         return str(MODELS_DIR / "face" / "haarcascade_frontalface_default.xml")
 
     @property
-    def activities_path(self) -> str:
-        """Get path to activities configuration file."""
-        return str(DATA_DIR / "activities.json")
-        
-    @property
     def fer_dataset_dir(self) -> Path:
-        """Get path to facial emotion recognition dataset directory."""
+        """Get path to facial expression recognition dataset directory."""
         return FER_DATASET_DIR
         
     @property
     def ser_dataset_dir(self) -> Path:
         """Get path to speech emotion recognition dataset directory."""
         return SER_DATASET_DIR
+
+    @property
+    def llm_config(self) -> LLMConfig:
+        """Get LLM configuration."""
+        return self._llm_config
 
 # Create global instance
 config = Config() 

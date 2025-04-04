@@ -1,10 +1,10 @@
 # Activity Recommendation System
 
-A sophisticated machine learning system that provides personalized activity recommendations based on emotion detection from facial expressions and speech patterns.
+A sophisticated system that provides personalized activity recommendations based on emotion detection from facial expressions and speech patterns.
 
 ## Features
 
-- **Facial Emotion Recognition (FER)**
+- **Facial Expression Recognition (FER)**
   - Real-time emotion detection from facial expressions
   - Support for multiple emotion categories
   - High-accuracy processing pipeline
@@ -47,30 +47,40 @@ A sophisticated machine learning system that provides personalized activity reco
 
 ```
 activity-recommendation-system/
+├── .github/                # GitHub configuration and workflows
 ├── configs/
 │   └── settings.py          # Configuration management
 ├── data/
 │   ├── raw/                 # Raw input data
-│   └── processed/           # Processed data
+│   │   └── fer2013/         # FER-2013 dataset sourced from Kaggle
+│   │       ├── train/       # Training images (emotion subfolders)
+│   │       └── test/        # Test images (emotion subfolders)
+│   ├── processed/           # Processed data
+│   └── datasets/            # Additional dataset storage
 ├── docs/
-│   └── api.md              # API documentation
-├── models/
-│   ├── face/               # Face recognition models
-│   └── speech/             # Speech recognition models
+│   └── api.md               # API documentation
+├── models/                 # Trained model storage
+├── scripts/
+│   ├── download_datasets.py # Dataset download script
+│   └── train_models.py      # Model training script
 ├── src/
+│   ├── models/              # Model implementations
+│   │   ├── fer_model.py     # Facial expression recognition
+│   │   └── ser_model.py     # Speech emotion recognition
 │   ├── recognition/
 │   │   ├── face_recognition.py
 │   │   └── speech_recognition.py
 │   └── utils/
 │       └── logger.py
-├── tests/
-│   ├── test_fer_model.py
-│   └── test_ser_model.py
-├── app.py                  # Main application file
+├── tests/                  # Test suite
 ├── .gitignore
+├── .pre-commit-config.yaml # Pre-commit hooks configuration
+├── Dockerfile              # Container configuration
+├── docker-compose.yml      # Container orchestration
 ├── LICENSE
 ├── README.md
-└── requirements.txt
+├── requirements.txt        # Production dependencies
+└── requirements-dev.txt    # Development dependencies
 ```
 
 ## Usage
@@ -83,7 +93,7 @@ activity-recommendation-system/
 2. Access the web interface at `http://localhost:8501`
 
 3. Process your input:
-   - For facial emotion recognition: Upload a clear facial image
+   - For facial expression recognition: Upload a clear facial image
    - For speech emotion recognition: Upload a WAV audio file
 
 4. Generate recommendations by clicking "Get Recommendations"
@@ -129,7 +139,13 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Acknowledgments
 
-- OpenCV for computer vision capabilities
-- Librosa for audio processing
-- Streamlit for the web interface
-- FastAI for the speech emotion recognition model
+- [OpenCV](https://opencv.org/) - For image processing and facial detection capabilities
+- [Librosa](https://librosa.org/) - For audio feature extraction and processing
+- [NumPy](https://numpy.org/) - For numerical computing operations
+- [FastAI](https://fast.ai/) - For deep learning model implementation in speech recognition
+- [TensorFlow](https://www.tensorflow.org/) - For implementing the facial expression recognition model
+- [PyTorch](https://pytorch.org/) - For deep learning model training and inference
+- [Hugging Face Transformers](https://huggingface.co/transformers) - For open-source language models and tokenization
+- [Matplotlib](https://matplotlib.org/) - For data visualization and image processing
+- [Streamlit](https://streamlit.io/) - For creating our interactive web interface
+- [Python](https://www.python.org/) - Core programming language

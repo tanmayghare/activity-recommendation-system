@@ -26,7 +26,7 @@ logger = setup_logger(__name__)
 # Dataset URLs and their destinations
 DATASETS = {
     "fer": {
-        "name": "Facial Emotion Recognition Dataset",
+        "name": "Facial Expression Recognition Dataset",
         "url": "https://storage.googleapis.com/activity-recommendation-system/datasets/fer2013.zip",
         "path": "data/datasets/fer",
         "extract": True,
@@ -193,7 +193,7 @@ def download_dataset(dataset_name: str, dataset_info: Dict) -> bool:
 def main():
     """Main function to download datasets."""
     parser = argparse.ArgumentParser(description="Download datasets for emotion recognition")
-    parser.add_argument("--fer", action="store_true", help="Download facial emotion recognition dataset")
+    parser.add_argument("--fer", action="store_true", help="Download facial expression recognition dataset")
     parser.add_argument("--ser", action="store_true", help="Download speech emotion recognition dataset")
     parser.add_argument("--all", action="store_true", help="Download all datasets")
     
