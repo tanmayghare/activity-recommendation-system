@@ -45,10 +45,6 @@ logs/
 *.pth
 
 # Temporary files
-data/processed/*
-!data/processed/.gitkeep
-data/raw/*
-!data/raw/.gitkeep
 *.tmp
 
 # Test coverage

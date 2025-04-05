@@ -20,7 +20,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Create necessary directories
-RUN mkdir -p data/raw data/processed logs temp
+RUN mkdir -p data/datasets logs temp
 
 # Set environment variables
 ENV PYTHONPATH=/app
