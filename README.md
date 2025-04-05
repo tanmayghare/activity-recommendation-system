@@ -15,7 +15,8 @@ A sophisticated system that provides personalized activity recommendations based
   - Confidence score generation
 
 - **Activity Recommendations**
-  - Context-aware activity suggestions based on detected emotions
+  - Dynamic activity suggestions using LLM
+  - Context-aware recommendations based on detected emotions
   - Multiple recommendation options per emotion
   - Intuitive web interface
 
@@ -49,7 +50,8 @@ A sophisticated system that provides personalized activity recommendations based
 activity-recommendation-system/
 ├── .github/                # GitHub configuration and workflows
 ├── configs/
-│   └── settings.py          # Configuration management
+│   ├── settings.py          # Configuration management
+│   └── haarcascade_frontalface_default.xml  # Face detection model
 ├── data/
 │   ├── datasets/            # Dataset storage
 │   │   ├── FER-2013/        # FER-2013 dataset (included in repo)
@@ -67,9 +69,11 @@ activity-recommendation-system/
 │   ├── models/              # Model implementations
 │   │   ├── fer_model.py     # Facial expression recognition
 │   │   └── ser_model.py     # Speech emotion recognition
-│   ├── recognition/
+│   ├── recognition/         # Emotion recognition modules
 │   │   ├── face_recognition.py
 │   │   └── speech_recognition.py
+│   ├── recommendation/      # Activity recommendation module
+│   │   └── llm_recommender.py
 │   └── utils/
 │       └── logger.py
 ├── tests/                  # Test suite
@@ -85,18 +89,23 @@ activity-recommendation-system/
 
 ## Usage
 
-1. Launch the application:
+1. Train the FER model:
+   ```bash
+   python scripts/train_models.py --fer
+   ```
+
+2. Launch the application:
    ```bash
    streamlit run app.py
    ```
 
-2. Access the web interface at `http://localhost:8501`
+3. Access the web interface at `http://localhost:8501`
 
-3. Process your input:
+4. Process your input:
    - For facial expression recognition: Upload a clear facial image
    - For speech emotion recognition: Upload a WAV audio file
 
-4. Generate recommendations by clicking "Get Recommendations"
+5. Generate recommendations by clicking "Get Recommendations"
 
 ## Model Training
 
