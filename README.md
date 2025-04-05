@@ -38,9 +38,9 @@ A sophisticated system that provides personalized activity recommendations based
    pip install -r requirements.txt
    ```
 
-4. Download required models:
+4. For development, install additional dependencies:
    ```bash
-   python scripts/download_models.py
+   pip install -r requirements-dev.txt
    ```
 
 ## Project Structure
@@ -51,17 +51,17 @@ activity-recommendation-system/
 ├── configs/
 │   └── settings.py          # Configuration management
 ├── data/
-│   ├── raw/                 # Raw input data
-│   │   └── fer2013/         # FER-2013 dataset sourced from Kaggle
-│   │       ├── train/       # Training images (emotion subfolders)
-│   │       └── test/        # Test images (emotion subfolders)
-│   ├── processed/           # Processed data
-│   └── datasets/            # Additional dataset storage
+│   ├── datasets/            # Dataset storage
+│   │   ├── FER-2013/        # FER-2013 dataset (included in repo)
+│   │   │   ├── train/       # Training images (emotion subfolders)
+│   │   │   └── test/        # Test images (emotion subfolders)
+│   │   └── ser/             # Speech emotion dataset (placeholder)
+│   └── results/             # Model outputs and results
 ├── docs/
 │   └── api.md               # API documentation
+├── logs/                   # Application logs
 ├── models/                 # Trained model storage
 ├── scripts/
-│   ├── download_datasets.py # Dataset download script
 │   └── train_models.py      # Model training script
 ├── src/
 │   ├── models/              # Model implementations
@@ -98,14 +98,40 @@ activity-recommendation-system/
 
 4. Generate recommendations by clicking "Get Recommendations"
 
-## Configuration
+## Model Training
 
-System configuration is managed through `configs/settings.py`:
+To train the models:
 
-- Model configurations and parameters
-- Data directory paths
-- Logging settings
-- Application parameters
+1. Ensure the FER-2013 dataset is in the correct location:
+   ```
+   data/datasets/FER-2013/
+   ├── train/
+   │   ├── Angry/
+   │   ├── Disgust/
+   │   ├── Fear/
+   │   ├── Happy/
+   │   ├── Sad/
+   │   ├── Surprise/
+   │   └── Neutral/
+   └── test/
+       ├── Angry/
+       ├── Disgust/
+       ├── Fear/
+       ├── Happy/
+       ├── Sad/
+       ├── Surprise/
+       └── Neutral/
+   ```
+
+2. Train the FER model:
+   ```bash
+   python scripts/train_models.py --fer
+   ```
+
+3. Train the SER model (when dataset is available):
+   ```bash
+   python scripts/train_models.py --ser
+   ```
 
 ## Development
 
@@ -114,15 +140,22 @@ System configuration is managed through `configs/settings.py`:
    pip install -r requirements-dev.txt
    ```
 
-2. Execute test suite:
+2. Run tests:
    ```bash
    pytest tests/
    ```
 
-3. Verify code quality:
+3. Check code quality:
    ```bash
    flake8 src/
    black src/
+   mypy src/
+   ```
+
+4. Update documentation:
+   ```bash
+   cd docs
+   make html
    ```
 
 ## Contributing
