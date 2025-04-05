@@ -6,106 +6,60 @@ from fastai.vision.all import *
 from fastai.tabular.all import *
 from fastai.text.all import *
 from fastai.vision.widgets import *
+from pathlib import Path
 
 class FetchLabel:
     def get_emotion(self, file_path):
         """
         Extracts emotion from the file path based on predefined mappings.
+        Note: This is a placeholder implementation. Update this when the actual SER dataset is available.
         """
-        item = file_path.split('/')[-1]
-        emotion_map = {
-            '02': 'calm',
-            '03': 'happy',
-            '04': 'sad',
-            '05': 'angry',
-            '06': 'fearful',
-            '01': 'neutral',
-            '07': 'disgusted',
-            '08': 'surprised'
-        }
-        first_letter_map = {
-            'a': 'angry',
-            'f': 'fearful',
-            'h': 'happy',
-            'n': 'neutral',
-            'sa': 'sad',
-            'd': 'disgusted',
-            'su': 'surprised'
-        }
-        if item[:2] in first_letter_map:
-            return f"male_{first_letter_map[item[:2]]}"
-        if item[:1] in first_letter_map:
-            return f"male_{first_letter_map[item[:1]]}"
-        emotion = emotion_map.get(item[6:-16])
-        if emotion:
-            gender = 'female' if int(item[18:-4]) % 2 == 0 else 'male'
-            return f"{gender}_{emotion}"
-        return None
+        # Placeholder implementation - update when SER dataset is available
+        return "neutral"  # Default emotion
 
 class SERModel:
-    def __init__(self, audio_folder, output_folder_train, output_folder_test):
-        self.audio_folder = audio_folder
-        self.output_folder_train = output_folder_train
-        self.output_folder_test = output_folder_test
+    def __init__(self, audio_folder=None, output_folder_train=None, output_folder_test=None):
+        """
+        Initialize the SER model with placeholder paths.
+        Note: These paths will be updated when the SER dataset is available.
+        """
+        # Placeholder paths - update when SER dataset is available
+        self.audio_folder = audio_folder or "data/datasets/ser/audio"
+        self.output_folder_train = output_folder_train or "data/datasets/ser/train"
+        self.output_folder_test = output_folder_test or "data/datasets/ser/test"
         self.label = FetchLabel()
 
     def plot_audio_file(self, file_path):
         """
         Plots the waveform of the audio file.
+        Note: This is a placeholder implementation. Update when SER dataset is available.
         """
-        data, sampling_rate = librosa.load(file_path)
-        plt.figure(figsize=(40, 5))
-        librosa.display.waveplot(data, sr=sampling_rate)
-        plt.show()
+        print("SER dataset not available yet. This is a placeholder implementation.")
+        return None
 
     def extract_features(self, file_path):
         """
         Extracts and displays the mel spectrogram of the audio file.
+        Note: This is a placeholder implementation. Update when SER dataset is available.
         """
-        y, sr = librosa.load(file_path)
-        yt, _ = librosa.effects.trim(y)
-        audio_spectogram = librosa.feature.melspectrogram(y=y, sr=sr, n_fft=1024, hop_length=100)
-        audio_spectogram = librosa.power_to_db(audio_spectogram, ref=np.max)
-        librosa.display.specshow(audio_spectogram, y_axis='mel', fmax=20000, x_axis='time')
-        plt.show()
+        print("SER dataset not available yet. This is a placeholder implementation.")
+        return None
 
     def process_audio_files(self):
         """
         Processes all audio files in the specified folder and prints their emotions.
+        Note: This is a placeholder implementation. Update when SER dataset is available.
         """
-        for actor in glob.glob(self.audio_folder):
-            for name in glob.glob(actor + '/*'):
-                emotion = self.label.get_emotion(name[-24:])
-                print(emotion)
+        print("SER dataset not available yet. This is a placeholder implementation.")
+        return None
 
     def train_model(self):
         """
         Trains the model using the training data and saves the trained model.
+        Note: This is a placeholder implementation. Update when SER dataset is available.
         """
-        # Load training data
-        train_path = Path(self.output_folder_train)
-        dls = ImageDataLoaders.from_folder(train_path, valid_pct=0.2, seed=42, num_workers=0)
-        
-        # Create a CNN learner with ResNet-34 architecture
-        learn = cnn_learner(dls, models.resnet34, loss_func=CrossEntropyLossFlat(), metrics=accuracy)
-        
-        # Find the optimal learning rate
-        lrs = learn.lr_find(suggest_funcs=(minimum, steep, valley, slide))
-        lr_steep = lrs.steep
-        
-        # Train the model
-        learn.fit(5, float(f"{lr_steep:.2e}"))
-        
-        # Show training results
-        learn.show_results()
-        
-        # Interpret the results
-        interp = ClassificationInterpretation.from_learner(learn)
-        interp.plot_confusion_matrix(figsize=(12, 12), dpi=60)
-        
-        # Freeze the model and export it
-        learn.freeze()
-        learn.export('ser_saved_models/speech_1.pkl')
+        print("SER dataset not available yet. This is a placeholder implementation.")
+        return None
 
 if __name__ == "__main__":
     audio_folder = "Actor_*/"

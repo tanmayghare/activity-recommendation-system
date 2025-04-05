@@ -1,6 +1,5 @@
 import os
 import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
 from keras.preprocessing.image import ImageDataGenerator
 from keras.layers import Dense, Dropout, Flatten, Conv2D, BatchNormalization, Activation, MaxPooling2D
@@ -10,45 +9,25 @@ from keras.callbacks import ModelCheckpoint
 
 class FERModel:
     def __init__(self, data_path, pic_size=48, batch_size=128, epochs=50):
+        """
+        Initialize the FER model.
+        
+        Args:
+            data_path: Path to the FER-2013 dataset directory containing train and test subdirectories
+            pic_size: Size of input images (default: 48x48)
+            batch_size: Batch size for training (default: 128)
+            epochs: Number of training epochs (default: 50)
+        """
         self.data_path = data_path
         self.pic_size = pic_size
         self.batch_size = batch_size
         self.epochs = epochs
         self.model = self.build_model()
         self.emotion_labels = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
-    
-    def preprocess_fer2013(self):
-        """
-        Preprocesses the FER-2013 dataset from CSV format to image files.
-        """
-        # Read the CSV file
-        df = pd.read_csv(os.path.join(self.data_path, 'fer2013.csv'))
-        
-        # Create directories for train and test sets
-        for emotion in self.emotion_labels:
-            os.makedirs(os.path.join(self.data_path, 'train', emotion), exist_ok=True)
-            os.makedirs(os.path.join(self.data_path, 'test', emotion), exist_ok=True)
-        
-        # Process each image
-        for idx, row in df.iterrows():
-            pixels = np.array(row['pixels'].split(' '), dtype='float32')
-            pixels = pixels.reshape(48, 48)
-            
-            # Convert to image and save
-            plt.imsave(
-                os.path.join(
-                    self.data_path,
-                    'train' if row['Usage'] == 'Training' else 'test',
-                    self.emotion_labels[row['emotion']],
-                    f'image_{idx}.png'
-                ),
-                pixels,
-                cmap='gray'
-            )
 
     def visualize_data(self):
         """
-        Visualizes a sample of training images.
+        Visualizes a sample of training images from each emotion category.
         """
         plt.figure(0, figsize=(12, 20))
         cpt = 0
@@ -67,6 +46,8 @@ class FERModel:
     def data_generator(self):
         """
         Creates data generators for training and validation datasets.
+        Returns:
+            train_generator, validation_generator, test_generator
         """
         train_datagen = ImageDataGenerator(
             rescale=1.0/255.0,
@@ -202,27 +183,29 @@ class FERModel:
 
 if __name__ == "__main__":
     # Define paths
-    data_path = "data/raw/fer2013"
+    data_path = "data/datasets/FER-2013"
     
     # Initialize and run the FER model
-    fer_model = FERModel(data_path)
+    fer_model = FERModel(
+        data_path=data_path,
+        pic_size=48,
+        batch_size=32,
+        epochs=50
+    )
     
-    # Preprocess the dataset
-    fer_model.preprocess_fer2013()
-    
-    # Visualize data
+    # Visualize sample data
     fer_model.visualize_data()
     
     # Get data generators
-    train_generator, validation_generator, test_generator = fer_model.data_generator()
+    train_gen, val_gen, test_gen = fer_model.data_generator()
     
     # Compile and train the model
     fer_model.compile_model()
-    history = fer_model.train_model(train_generator, validation_generator)
+    history = fer_model.train_model(train_gen, val_gen)
     
     # Evaluate the model
-    test_loss, test_accuracy = fer_model.evaluate_model(test_generator)
-    print(f"Test accuracy: {test_accuracy:.4f}")
+    test_loss, test_acc = fer_model.evaluate_model(test_gen)
+    print(f"Test accuracy: {test_acc:.4f}")
     
     # Save the model
     fer_model.save_model("models/fer_model")
