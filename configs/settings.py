@@ -3,29 +3,29 @@
 import os
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 
 # Base directories
-BASE_DIR = Path(__file__).resolve().parent.parent
-DATA_DIR = BASE_DIR / "data"
-MODELS_DIR = BASE_DIR / "models"
-TEMP_DIR = BASE_DIR / "tmp"
-LOGS_DIR = BASE_DIR / "logs"
+BASE_DIR: Path = Path(__file__).resolve().parent.parent
+DATA_DIR: Path = BASE_DIR / "data"
+MODELS_DIR: Path = BASE_DIR / "models"
+TEMP_DIR: Path = BASE_DIR / "tmp"
+LOGS_DIR: Path = BASE_DIR / "logs"
 
-# Dataset paths - TO BE UPDATED when datasets are available
-DATASET_DIR = DATA_DIR / "datasets"
-FER_DATASET_DIR = Path("FER-2013")  # Updated to use the FER-2013 directory in project root
-SER_DATASET_DIR = DATASET_DIR / "ser"
-FER_TRAIN_DIR = FER_DATASET_DIR / "train"
-FER_VAL_DIR = FER_DATASET_DIR / "test"  # Using test set for validation
-SER_TRAIN_DIR = SER_DATASET_DIR / "train"
-SER_VAL_DIR = SER_DATASET_DIR / "val"
+# Dataset paths
+DATASET_DIR: Path = DATA_DIR / "datasets"
+FER_DATASET_DIR: Path = DATASET_DIR / "FER-2013"
+SER_DATASET_DIR: Path = DATASET_DIR / "ser"
+FER_TRAIN_DIR: Path = FER_DATASET_DIR / "train"
+FER_VAL_DIR: Path = FER_DATASET_DIR / "test"  # Using test set for validation
+SER_TRAIN_DIR: Path = SER_DATASET_DIR / "train"
+SER_VAL_DIR: Path = SER_DATASET_DIR / "val"
 
 @dataclass
 class ModelConfig:
     """Configuration for ML models."""
     model_path: str
-    input_size: tuple
+    input_size: tuple[int, int]
     classes: List[str]
     batch_size: int = 32
     epochs: int = 10
@@ -44,7 +44,7 @@ class LLMConfig:
     torch_dtype: str = "float16"  # 'float16' or 'float32'
     
     # Model alternatives for different resource constraints
-    available_models: dict = {
+    available_models: Dict[str, str] = {
         "tiny": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",   # Lightweight (1.1B parameters)
         "small": "facebook/opt-350m",                   # Very small (350M parameters)
         "medium": "facebook/opt-1.3b",                  # Medium size (1.3B parameters)
@@ -62,13 +62,13 @@ class AppConfig:
 
 class Config:
     """Main configuration class."""
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize configuration with default values."""
         self._create_directories()
         self._init_configs()
         self._llm_config = LLMConfig()
 
-    def _create_directories(self):
+    def _create_directories(self) -> None:
         """Create necessary directories if they don't exist."""
         for directory in [DATA_DIR, MODELS_DIR, TEMP_DIR, LOGS_DIR, DATASET_DIR, 
                          FER_DATASET_DIR, SER_DATASET_DIR, 
@@ -76,12 +76,10 @@ class Config:
                          SER_TRAIN_DIR, SER_VAL_DIR]:
             directory.mkdir(exist_ok=True)
             
-        # Create subdirectories
-        (DATA_DIR / "raw").mkdir(exist_ok=True)
-        (DATA_DIR / "processed").mkdir(exist_ok=True)
+        # Create results directory for model outputs
         (DATA_DIR / "results").mkdir(exist_ok=True)
 
-    def _init_configs(self):
+    def _init_configs(self) -> None:
         """Initialize specific configurations."""
         self.fer_config = ModelConfig(
             model_path=str(MODELS_DIR / "fer_model.h5"),
