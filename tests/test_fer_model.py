@@ -7,8 +7,8 @@ from configs.settings import config
 @pytest.fixture
 def face_recognizer():
     """Create a FaceRecognition instance for testing."""
-    model_path = Path(config.models_dir) / "face"
-    cascade_path = Path(config.models_dir) / "haarcascade_frontalface_default.xml"
+    model_path = Path(config.models_dir) / "fer_model.pkl"
+    cascade_path = Path(config.config_dir) / "haarcascade_frontalface_default.xml"
     return FaceRecognition(str(model_path), str(cascade_path))
 
 @pytest.fixture

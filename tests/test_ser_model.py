@@ -8,7 +8,7 @@ from configs.settings import config
 @pytest.fixture
 def speech_recognizer():
     """Create a SpeechEmotionRecognizer instance for testing."""
-    model_path = Path(config.models_dir) / "speech_1.pkl"
+    model_path = Path(config.models_dir) / "ser_model.pkl"
     audio_path = Path(config.data_dir) / "raw" / "test.wav"
     return SpeechEmotionRecognizer(str(model_path), str(audio_path))
 

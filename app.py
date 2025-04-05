@@ -12,11 +12,11 @@ class ActivityRecommendationSystem:
         """Initialize the activity recommendation system with proper error handling."""
         try:
             self.face_recognizer = FaceRecognition(
-                str(config.models_dir / "face"),
-                str(config.models_dir / "haarcascade_frontalface_default.xml")
+                str(config.models_dir / "fer_model.pkl"),
+                str(config.config_dir / "haarcascade_frontalface_default.xml")
             )
             self.speech_recognizer = SpeechEmotionRecognizer(
-                str(config.models_dir / "speech_1.pkl"),
+                str(config.models_dir / "ser_model.pkl"),
                 str(config.data_dir / "raw" / "audio.wav")
             )
             self.llm_recommender = LLMRecommender()

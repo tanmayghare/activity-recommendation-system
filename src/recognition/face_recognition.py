@@ -192,8 +192,8 @@ class FaceRecognition:
 
 if __name__ == '__main__':
     try:
-        model_path = Path(config.models_dir) / "face"
-        cascade_path = Path(config.models_dir) / "haarcascade_frontalface_default.xml"
+        model_path = Path(config.models_dir) / "fer_model.pkl"
+        cascade_path = Path(config.config_dir) / "haarcascade_frontalface_default.xml"
         image_path = Path(config.data_dir) / "raw" / "test.jpg"
         
         recognizer = FaceRecognition(str(model_path), str(cascade_path))

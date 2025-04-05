@@ -82,7 +82,7 @@ class Config:
     def _init_configs(self) -> None:
         """Initialize specific configurations."""
         self.fer_config = ModelConfig(
-            model_path=str(MODELS_DIR / "fer_model.h5"),
+            model_path=str(MODELS_DIR / "fer_model.pkl"),
             input_size=(48, 48),
             classes=["angry", "disgust", "fear", "happy", "neutral", "sad", "surprise"],
             batch_size=32,

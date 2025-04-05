@@ -125,7 +125,7 @@ class SpeechEmotionRecognizer:
 
 if __name__ == '__main__':
     try:
-        model_path = Path(config.models_dir) / "speech_1.pkl"
+        model_path = Path(config.models_dir) / "ser_model.pkl"
         audio_path = Path(config.data_dir) / "raw" / "audio.wav"
         recognizer = SpeechEmotionRecognizer(str(model_path), str(audio_path))
         recognizer.run()
