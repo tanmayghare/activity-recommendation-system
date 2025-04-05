@@ -8,6 +8,7 @@ import sys
 import logging
 from pathlib import Path
 import argparse
+from typing import Tuple, Optional
 
 # Add the project root to the Python path
 sys.path.append(str(Path(__file__).parent.parent))
@@ -20,21 +21,28 @@ from configs.settings import config
 # Set up logger
 logger = setup_logger(__name__)
 
-def train_fer_model():
-    """Train the facial expression recognition model."""
+def train_fer_model() -> bool:
+    """
+    Train the facial expression recognition model.
+    
+    Returns:
+        bool: True if training was successful, False otherwise
+    """
     try:
         logger.info("Starting FER model training...")
         
         # Check if dataset directory exists
-        if not Path("FER-2013").exists():
-            logger.warning("FER-2013 dataset directory not found")
-            logger.info("Please ensure the FER-2013 dataset is in the project root directory")
-            logger.info("Expected structure: FER-2013/train/<emotion>/<image_files> and FER-2013/test/<emotion>/<image_files>")
+        if not config.fer_config.train_data_dir.exists():
+            logger.error(f"Training dataset directory not found: {config.fer_config.train_data_dir}")
+            return False
+            
+        if not config.fer_config.val_data_dir.exists():
+            logger.error(f"Validation dataset directory not found: {config.fer_config.val_data_dir}")
             return False
         
         # Initialize and train the model
         fer_model = FERModel(
-            data_path="FER-2013",
+            data_path=str(config.fer_dataset_dir),
             pic_size=config.fer_config.input_size[0],
             batch_size=config.fer_config.batch_size,
             epochs=config.fer_config.epochs
@@ -63,8 +71,8 @@ def train_fer_model():
         
         # Save model
         logger.info("Saving model...")
-        model_path = Path(config.models_dir) / "face"
-        model_path.mkdir(exist_ok=True)
+        model_path = Path(config.fer_config.model_path)
+        model_path.parent.mkdir(parents=True, exist_ok=True)
         fer_model.save_model(str(model_path))
         
         logger.info("FER model training completed successfully")
@@ -74,8 +82,13 @@ def train_fer_model():
         logger.error(f"Error training FER model: {str(e)}")
         return False
 
-def train_ser_model():
-    """Train the speech emotion recognition model."""
+def train_ser_model() -> bool:
+    """
+    Train the speech emotion recognition model.
+    
+    Returns:
+        bool: True if training was successful, False otherwise
+    """
     try:
         logger.info("Starting SER model training...")
         
@@ -110,8 +123,13 @@ def train_ser_model():
         logger.error(f"Error training SER model: {str(e)}")
         return False
 
-def main():
-    """Main function to train the models."""
+def main() -> int:
+    """
+    Main function to train the models.
+    
+    Returns:
+        int: 0 if successful, 1 if any error occurred
+    """
     parser = argparse.ArgumentParser(description="Train emotion recognition models")
     parser.add_argument("--fer", action="store_true", help="Train facial expression recognition model")
     parser.add_argument("--ser", action="store_true", help="Train speech emotion recognition model")
