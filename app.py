@@ -80,8 +80,8 @@ class ActivityRecommendationSystem:
             
         return True
 
-    def process_face_emotion(self, uploaded_file) -> Optional[str]:
-        """Process facial emotion from the uploaded image with validation."""
+    def process_facial_expression(self, uploaded_file) -> Optional[str]:
+        """Process facial expression from the uploaded image with validation."""
         try:
             if not self.validate_image_file(uploaded_file):
                 return None
@@ -91,22 +91,22 @@ class ActivityRecommendationSystem:
             with open(image_path, "wb") as f:
                 f.write(uploaded_file.getbuffer())
             
-            app_logger.info(f"Processing face emotion from {image_path}")
+            app_logger.info(f"Processing facial expression from {image_path}")
             self.face_recognizer.run(image_path)
             
             # Read the result
-            result_path = Path(config.data_dir) / "results" / "FinalFaceEmotion.txt"
+            result_path = Path(config.data_dir) / "results" / "FinalFacialExpression.txt"
             if not result_path.exists():
                 raise FileNotFoundError(f"Result file not found: {result_path}")
                 
             with open(result_path) as f:
                 emotion = f.readline().strip().lower()
             
-            app_logger.info(f"Detected face emotion: {emotion}")
+            app_logger.info(f"Detected facial expression: {emotion}")
             return emotion
         except Exception as e:
-            app_logger.error(f"Failed to process face emotion: {str(e)}")
-            st.error("Error processing facial emotion. Please try again.")
+            app_logger.error(f"Failed to process facial expression: {str(e)}")
+            st.error("Error processing facial expression. Please try again.")
             return None
 
     def process_speech_emotion(self, uploaded_file) -> Optional[str]:
@@ -174,23 +174,23 @@ def main():
         # Process button
         if st.button("Get Recommendations"):
             with st.spinner("Processing..."):
-                face_emotion = system.process_face_emotion(face_file)
+                face_expression = system.process_facial_expression(face_file)
                 speech_emotion = system.process_speech_emotion(audio_file)
                 
-                if face_emotion is None and speech_emotion is None:
+                if face_expression is None and speech_emotion is None:
                     st.warning("Please upload at least one valid file to get recommendations.")
                     return
                 
                 # Display results
                 st.subheader("Detected Emotions")
-                if face_emotion:
-                    st.write(f"Facial Emotion: {face_emotion.capitalize()}")
+                if face_expression:
+                    st.write(f"Facial Expression: {face_expression.capitalize()}")
                 if speech_emotion:
                     st.write(f"Speech Emotion: {speech_emotion.capitalize()}")
                 
                 # Get and display recommendations
                 st.subheader("Recommended Activities")
-                emotions = [e for e in [face_emotion, speech_emotion] if e is not None]
+                emotions = [e for e in [face_expression, speech_emotion] if e is not None]
                 for emotion in emotions:
                     recommendations = system.get_recommendations(emotion)
                     st.write(f"For {emotion.capitalize()}:")

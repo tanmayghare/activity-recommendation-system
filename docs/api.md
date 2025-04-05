@@ -24,7 +24,7 @@ Currently, the API does not require authentication. However, rate limiting is im
 
 ## Endpoints
 
-### Detect Face Emotion
+### Detect Facial Expression
 
 ```http
 POST /emotion/face
@@ -150,7 +150,7 @@ All error responses follow this format:
 
 ### cURL
 
-Detect face emotion:
+Detect facial expression:
 ```bash
 curl -X POST \
   http://localhost:8501/api/v1/emotion/face \
@@ -169,7 +169,7 @@ curl -X GET \
 ```python
 import requests
 
-# Detect face emotion
+# Detect facial expression
 files = {'image': open('image.jpg', 'rb')}
 response = requests.post('http://localhost:8501/api/v1/emotion/face', files=files)
 print(response.json())

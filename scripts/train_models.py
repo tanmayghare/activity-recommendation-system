@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Script to train the facial and speech emotion recognition models.
+Script to train the facial expression and speech emotion recognition models.
 """
 
 import os

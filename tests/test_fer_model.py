@@ -65,7 +65,7 @@ def test_save_results(face_recognizer, tmp_path):
     confidence = 0.95
     face_recognizer.save_results(emotion, confidence)
     
-    result_path = Path(config.data_dir) / "results" / "FinalFaceEmotion.txt"
+    result_path = Path(config.data_dir) / "results" / "FinalFacialExpression.txt"
     assert result_path.exists()
     
     with open(result_path) as f:
@@ -90,7 +90,7 @@ def test_run_complete_process(face_recognizer, sample_image):
     face_recognizer.run(sample_image)
     
     # Check that results were saved
-    result_path = Path(config.data_dir) / "results" / "FinalFaceEmotion.txt"
+    result_path = Path(config.data_dir) / "results" / "FinalFacialExpression.txt"
     assert result_path.exists()
     
     # Check that temporary files were cleaned up

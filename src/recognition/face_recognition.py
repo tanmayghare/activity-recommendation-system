@@ -46,7 +46,7 @@ class FaceRecognition:
             raise
 
     def preprocess_image(self, image_path: Path) -> Tuple[np.ndarray, np.ndarray]:
-        """Preprocess the image for face detection and emotion recognition.
+        """Preprocess the image for face detection and expression recognition.
         
         Args:
             image_path: Path to the input image
@@ -157,7 +157,7 @@ class FaceRecognition:
             results_dir = Path(config.data_dir) / "results"
             results_dir.mkdir(parents=True, exist_ok=True)
             
-            result_path = results_dir / "FinalFaceEmotion.txt"
+            result_path = results_dir / "FinalFacialExpression.txt"
             with open(result_path, "w") as file:
                 file.write(f"{emotion.capitalize()}\nConfidence: {confidence:.2f}")
             
