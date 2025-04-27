@@ -1,6 +1,6 @@
 # Activity Recommendation System
 
-A real-time emotion detection and activity recommendation system that analyzes facial expressions and speech patterns to suggest personalized activities.
+A sophisticated system that provides personalized activity recommendations based on emotion detection from facial expressions and speech patterns.
 
 ## 🚀 Quick Start
 
@@ -82,14 +82,6 @@ activity-recommendation-system/
 - LLM-based suggestions
 - Context-aware responses
 - Personalized activities
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create your feature branch
-3. Commit your changes
-4. Push to the branch
-5. Open a Pull Request
 
 ## 📝 License
 
