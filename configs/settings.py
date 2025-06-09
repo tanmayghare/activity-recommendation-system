@@ -1,4 +1,4 @@
-"""Configuration management for the Activity Recommendation System."""
+"""Configuration management for the VibeCoach."""
 
 import os
 from dataclasses import dataclass

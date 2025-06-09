@@ -1,4 +1,4 @@
-# Activity Recommendation System
+# VibeCoach
 
 A sophisticated system that provides personalized activity recommendations based on emotion detection from facial expressions and speech patterns.
 
@@ -7,7 +7,7 @@ A sophisticated system that provides personalized activity recommendations based
 1. **Setup Environment**
    ```bash
    git clone <repository-url>
-   cd activity-recommendation-system
+   cd vibe-coach
    python -m venv venv
    source venv/bin/activate  # On Windows: venv\Scripts\activate
    pip install -r requirements.txt
@@ -45,7 +45,7 @@ A sophisticated system that provides personalized activity recommendations based
 ## 📁 Project Structure
 
 ```
-activity-recommendation-system/
+vibe-coach/
 ├── data/           # Dataset storage
 │   └── datasets/   # FER-2013 and RAVDESS datasets
 ├── models/         # Trained models

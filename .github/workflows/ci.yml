@@ -68,7 +68,7 @@ jobs:
         context: .
         push: true
         tags: |
-          ${{ secrets.DOCKERHUB_USERNAME }}/activity-recommendation-system:latest
-          ${{ secrets.DOCKERHUB_USERNAME }}/activity-recommendation-system:${{ github.sha }}
-        cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/activity-recommendation-system:buildcache
-        cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/activity-recommendation-system:buildcache,mode=max 
+          ${{ secrets.DOCKERHUB_USERNAME }}/vibe-coach:latest
+          ${{ secrets.DOCKERHUB_USERNAME }}/vibe-coach:${{ github.sha }}
+        cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/vibe-coach:buildcache
+        cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/vibe-coach:buildcache,mode=max 

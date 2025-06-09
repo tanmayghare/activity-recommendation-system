@@ -1,4 +1,4 @@
-"""LLM-based activity recommendation system using open-source models."""
+"""LLM-based VibeCoach using open-source models."""
 
 from typing import List, Optional
 import torch

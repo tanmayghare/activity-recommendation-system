@@ -1,4 +1,4 @@
-"""Logging configuration for the Activity Recommendation System."""
+"""Logging configuration for the VibeCoach."""
 
 import logging
 import os

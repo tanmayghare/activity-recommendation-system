@@ -9,7 +9,7 @@ from configs.settings import config
 
 class ActivityRecommendationSystem:
     def __init__(self):
-        """Initialize the activity recommendation system with proper error handling."""
+        """Initialize the VibeCoach with proper error handling."""
         try:
             self.face_recognizer = FaceRecognition(
                 str(config.models_dir / "fer_model.pkl"),
@@ -142,12 +142,12 @@ def main():
     """Main application entry point with error handling."""
     try:
         st.set_page_config(
-            page_title="Activity Recommendation System",
+            page_title="VibeCoach",
             page_icon="🎭",
             layout="wide"
         )
         
-        st.title("Activity Recommendation System")
+        st.title("VibeCoach")
         st.write("Upload an image or audio file to get activity recommendations based on detected emotions.")
         
         system = ActivityRecommendationSystem()

@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Activity Recommendation System provides a RESTful API for emotion detection and activity recommendations. This document describes the available endpoints, request/response formats, and authentication requirements.
+The VibeCoach provides a RESTful API for emotion detection and activity recommendations. This document describes the available endpoints, request/response formats, and authentication requirements.
 
 ## Base URL
 
@@ -182,5 +182,5 @@ print(response.json())
 ## Support
 
 For API support or to report issues, please contact:
-- Email: support@activity-recommendation-system.com
-- GitHub Issues: https://github.com/yourusername/activity-recommendation-system/issues
+- Email: support@vibe-coach.com
+- GitHub Issues: https://github.com/yourusername/vibe-coach/issues
